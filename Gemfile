@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'nokogiri'
+ruby '>= 2.3.1'
+gem 'nokogiri', '~> 1.6.0'
 
-group :test do
-	gem 'webmock'
+group :test, :development do
+	gem 'webmock', '~> 2.1.0'
 end

@@ -8,3 +8,6 @@
 /spec/reports/
 /tmp/
 .DS_Store
+.rvmrc
+.ruby-gemset
+.ruby-version
