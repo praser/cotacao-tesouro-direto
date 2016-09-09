@@ -22,45 +22,52 @@ Or install it yourself as:
 
 After install the gem, require the library
 ```ruby
-require 'cotacao_tesouro_direto'
+require 'tesouro_direto'
 ```
 
-### Getin update prices and rates
+### Geting updated prices and rates
 
-To get update data from STN yo just need call class method sync as bellow.
+To get updated data from STN site you just need call class method sync as bellow.
 ```ruby
 TesouroDireto::Price.sync
 ```
 
-in case of the market being open when you request data the gem will response whtih a hash like the following, so you just need enjoy ;D!
+In case of the market being open when you request data the gem will response whtih a hash like the following, so you just need enjoy ;D!
  ```ruby
 {
-    :updated_at => "2016-09-02T17:48:13+00:00",
-        :titles => {
-              :ntnc_2017 => {
-            :abbreviation => "NTNC",
-                    :name => "Tesouro IGPM+ com Juros Semestrais 2017 (NTNC)",
-             :expire_date => "2017-07-01",
-                :buy_rate => nil,
-               :sell_rate => 633.0,
-               :buy_price => 0.0,
-              :sell_price => 359975.0,
-                   :index => "ipca"
-        },
-              :ntnc_2021 => {
-            :abbreviation => "NTNC",
-                    :name => "Tesouro IGPM+ com Juros Semestrais 2021 (NTNC)",
-             :expire_date => "2021-04-01",
-                :buy_rate => nil,
-               :sell_rate => 609.0,
-               :buy_price => 0.0,
-              :sell_price => 365296.0,
-                   :index => "ipca"
-        }...
-    }
+  :updated_at => "2016-09-02T17:48:13+00:00",
+  :titles => {
+    :ntnc_2017 => {
+      :abbreviation => "NTNC",
+              :name => "Tesouro IGPM+ com Juros Semestrais 2017 (NTNC)",
+       :expire_date => "2017-07-01",
+          :buy_rate => nil,
+         :sell_rate => 633.0,
+         :buy_price => 0.0,
+        :sell_price => 359975.0,
+             :index => "ipca"
+    },
+    :ntnc_2021 => {
+      :abbreviation => "NTNC",
+              :name => "Tesouro IGPM+ com Juros Semestrais 2021 (NTNC)",
+       :expire_date => "2021-04-01",
+          :buy_rate => nil,
+         :sell_rate => 609.0,
+         :buy_price => 0.0,
+        :sell_price => 365296.0,
+             :index => "ipca"
+    }...
+  }
 }
 ```
-
+If the market isn't opened you will receive the object bellow:
+```ruby
+{
+  :update_at => nil
+  :titles => nil
+  :message => "The market isn't open, please try again latter."
+}
+```
 
 ## Development
 

@@ -92,6 +92,30 @@ describe TesouroDireto::Price do
 			end
 		end
 	end
+	describe "sync with closed market" do
+		before do
+			api_url ||= "http://www3.tesouro.gov.br/tesouro_direto/consulta_titulos_novosite/consultatitulos.asp"
+			fixture_closed_market ||= File.join(File.expand_path("../..",__FILE__), "fixtures/closed_market.html.erb")
+			stub_request(:get, api_url).to_return(:body => File.read(fixture_closed_market))
+			@obj ||= TesouroDireto::Price.sync
+		end
+
+		it  "must return a hash" do
+			@obj.must_be_kind_of Hash
+		end
+
+		it "must have a nil updated at date" do
+			@obj[:updated_at].must_be_nil
+		end
+
+		it "must have a nil list of titles" do
+			@obj[:titles].must_be_nil
+		end
+
+		it "must alert that the market is not open" do
+			@obj[:message].must_equal "The market isn't open, please try again latter."
+		end
+	end
 end
 
 #segunda feira 17:30

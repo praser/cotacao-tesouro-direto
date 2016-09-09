@@ -11,3 +11,4 @@
 .rvmrc
 .ruby-gemset
 .ruby-version
+*.gem

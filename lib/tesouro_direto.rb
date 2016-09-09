@@ -11,7 +11,7 @@ module TesouroDireto
 
 		private
 		API_URL = "http://www3.tesouro.gov.br/tesouro_direto/consulta_titulos_novosite/consultatitulos.asp"
-		MAIN_XPATH = "//table/tr/td/table/tr/td/center/table/tr/"
+		MAIN_XPATH = "//table/tr/td/table/tr/td/center/table/tr"
 		
 		#Request data from the server
 		def self.get_data_from_website
@@ -28,22 +28,31 @@ module TesouroDireto
 			lines = []
 
 			doc = Nokogiri::HTML(body)
-			doc.remove_empty_lines!
-			doc.xpath("//comment()").remove
-			doc.xpath("#{MAIN_XPATH}td[@class='listing1']").remove
+			#Check if body has titles data
+			if !doc.at_xpath(MAIN_XPATH).nil? then
+				doc.remove_empty_lines!
+				doc.xpath("//comment()").remove
+				doc.xpath("#{MAIN_XPATH}/td[@class='listing1']").remove
 
-			@@updated_at = DateTime.strptime(doc.xpath("#{MAIN_XPATH}td[@class='listing2']/b").first.text, "%d-%m-%Y %H:%M:%S")
-			doc.xpath("#{MAIN_XPATH}td[@class='listing2']").remove
-			(doc.xpath("#{MAIN_XPATH}td[@class!='listing1']").count / cols_amount).times do |i|
-				line = []
-				cols_amount.times do
-					line << doc.xpath("#{MAIN_XPATH}td[@class!='listing1']")[k].text
-					k +=1
+				@@updated_at = DateTime.strptime(doc.xpath("#{MAIN_XPATH}/td[@class='listing2']/b").first.text, "%d-%m-%Y %H:%M:%S")
+				doc.xpath("#{MAIN_XPATH}/td[@class='listing2']").remove
+				(doc.xpath("#{MAIN_XPATH}/td[@class!='listing1']").count / cols_amount).times do |i|
+					line = []
+					cols_amount.times do
+						line << doc.xpath("#{MAIN_XPATH}/td[@class!='listing1']")[k].text
+						k +=1
+					end
+					lines << self.format_response(line)
 				end
-				lines << self.format_response(line)
-			end
 
-			self.to_hash(lines)
+				self.to_hash(lines)
+			else
+				return {
+					updated_at: nil,
+					titles: nil,
+					message: "The market isn't open, please try again latter."
+				}
+			end
 		end
 
 		#Format parsed response
